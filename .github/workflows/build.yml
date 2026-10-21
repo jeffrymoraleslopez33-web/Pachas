@@ -7,6 +7,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -19,22 +20,24 @@ jobs:
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.9'
 
       - name: Extract project
         run: |
           unzip -o PACHA_Proyecto_con_compilacion_nube.zip -d pacha-source
           find pacha-source -name gradlew -type f -exec chmod +x {} \;
 
-      -       - name: Build APK
+      - name: Inspect project
+        run: |
+          find pacha-source -maxdepth 4 -type f \( -name settings.gradle -o -name settings.gradle.kts -o -name build.gradle -o -name build.gradle.kts -o -name gradlew \)
+
+      - name: Build APK
         working-directory: pacha-source/PachaAndroid
         run: gradle --no-daemon assembleDebug
-
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: PACHA-APK
-          path: pacha-source/**/app/build/outputs/apk/debug/*.apk
+          path: pacha-source/PachaAndroid/**/build/outputs/apk/debug/*.apk
           if-no-files-found: error
+
