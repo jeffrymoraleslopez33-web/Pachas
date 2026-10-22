@@ -26,10 +26,12 @@ jobs:
           unzip -o PACHA_Proyecto_con_compilacion_nube.zip -d pacha-source
           find pacha-source -name gradlew -type f -exec chmod +x {} \;
 
-      - name: Inspect project
+      -       - name: Inspect project
         run: |
-          find pacha-source -maxdepth 4 -type f \( -name settings.gradle -o -name settings.gradle.kts -o -name build.gradle -o -name build.gradle.kts -o -name gradlew \)
-
+          echo "=== Carpetas extraídas ==="
+          find pacha-source -maxdepth 5 -type d
+          echo "=== Archivos Gradle ==="
+          find pacha-source -type f \( -name settings.gradle -o -name settings.gradle.kts -o -name build.gradle -o -name build.gradle.kts -o -name gradlew \)
       - name: Build APK
         working-directory: pacha-source/PachaAndroid
         run: gradle --no-daemon assembleDebug
